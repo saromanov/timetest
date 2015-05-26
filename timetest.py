@@ -47,7 +47,7 @@ class TimeTest:
     def run(self):
         report = []
         platform_item = self._platform_info()
-        print("Platform information:\n")
+        print("Platform information:")
         print("OS: {0}".format(platform_item['platform']))
         print("CPU count: {0}".format(platform_item['cpucount']))
         pyversion = platform_item['pyversion']
@@ -55,7 +55,7 @@ class TimeTest:
         memory = platform_item['memory']
         print("Total virtual memory: {0}".format(memory.total))
         print("Available virtual memory: {0}\n".format(memory.available))
-
+        print("Time tests:")
         for event in self.events:
             eventstart = datetime.datetime.now()
             event.fn()
