@@ -2,6 +2,7 @@ import datetime
 import sys
 import psutil
 
+
 #Main Event object
 class Event:
     def __init__(self, fn, title, *args, **kwargs):
@@ -17,9 +18,13 @@ class EventResult:
         self.delta = delta
 
 class TimeTest:
-    def __init__(self, backend=None):
+    def __init__(self, title, backend=None):
         self.events = []
-
+        self.backend=backend
+        self.title = title
+        if backend == 'redis':
+            import redisbackend
+            self.backend = redisbackend.RedisBackend()
 
     def __call__(self, fn, *args, **kwargs):
         self._construct_event(fn, fn.__name__)
@@ -44,6 +49,13 @@ class TimeTest:
         if event.hardlimit < delta:
             print("It takes much more time")
 
+    def _store_results(self, result):
+        """ Store results of tests to backend store"""
+        if self.backend == None:
+            return
+        else:
+            self.backend.addTimeTestResult(self.title, result)
+
     def run(self):
         report = []
         platform_item = self._platform_info()
@@ -60,5 +72,6 @@ class TimeTest:
             eventstart = datetime.datetime.now()
             event.fn()
             eventend = datetime.datetime.now()
-            print("{0} : {1}".format(event.title, eventend - eventstart))
+            delta = eventend - eventstart
+            print("{0} : {1}".format(event.title, delta))
         return report
