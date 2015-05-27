@@ -22,7 +22,7 @@ class EventResult:
 class PlatformInfo:
     def __init__(self, *args, **kwargs):
         self.platform = kwargs.get('platform')
-        self.cpucount = kwargs.get('cpuinfo')
+        self.cpucount = kwargs.get('cpucount')
         self.pyversion = kwargs.get('pyversion')
         self.memory = kwargs.get('memory')
 
@@ -47,7 +47,7 @@ class TimeTest:
         self.events.append(Event(fn, name, expected_delta=expected, hardlimit=hardlimit))
 
     def _platform_info(self):
-        return PlatformInfo(platform=sys.platform, cpucount=4,pyversion=sys.version_info, memory=psutil.virtual_memory())
+        return PlatformInfo(platform=sys.platform, cpucount=psutil.cpu_count(),pyversion=sys.version_info, memory=psutil.virtual_memory())
 
     def addTest(self, title, fn, *args, **kwargs):
         self._construct_event(fn,title, *args,**kwargs)
