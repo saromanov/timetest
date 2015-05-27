@@ -13,9 +13,17 @@ class Event:
 
 
 class EventResult:
-    def __init__(self, title, delta):
+    def __init__(self, title, delta, platform_info):
         self.title = title
         self.delta = delta
+        self.platform_info = platform_info
+
+class PlatformInfo:
+    def __init__(self, *args, **kwargs):
+        self.platform = kwargs.get('platform')
+        self.cpucount = kwargs.get('cpuinfo')
+        self.pyversion = kwargs.get('pyversion')
+        self.memory = kwargs.get('memory')
 
 class TimeTest:
     def __init__(self, title, backend=None):
@@ -38,7 +46,7 @@ class TimeTest:
         self.events.append(Event(fn, name, expected_delta=expected, hardlimit=hardlimit))
 
     def _platform_info(self):
-        return {'platform': sys.platform, 'cpucount': psutil.cpu_count(), 'pyversion': sys.version_info, 'memory': psutil.virtual_memory()}
+        return PlatformInfo(platform=sys.platform, cpucount=4,pyversion=sys.version_info, memory=psutil.virtual_memory())
 
     def addTest(self, title, fn, *args, **kwargs):
         self._construct_event(fn,title, *args,**kwargs)
@@ -49,22 +57,22 @@ class TimeTest:
         if event.hardlimit < delta:
             print("It takes much more time")
 
-    def _store_results(self, result):
+    def _store_results(self, info):
         """ Store results of tests to backend store"""
         if self.backend == None:
             return
         else:
-            self.backend.addTimeTestResult(self.title, result)
+            self.backend.addTimeTestResult(self.title, info)
 
     def run(self):
         report = []
         platform_item = self._platform_info()
         print("Platform information:")
-        print("OS: {0}".format(platform_item['platform']))
-        print("CPU count: {0}".format(platform_item['cpucount']))
-        pyversion = platform_item['pyversion']
+        print("OS: {0}".format(platform_item.platform))
+        print("CPU count: {0}".format(platform_item.cpucount))
+        pyversion = platform_item.pyversion
         print("Python version: {0}.{1}".format(pyversion.major, pyversion.minor))
-        memory = platform_item['memory']
+        memory = platform_item.memory
         print("Total virtual memory: {0}".format(memory.total))
         print("Available virtual memory: {0}\n".format(memory.available))
         print("Time tests:")
@@ -73,5 +81,5 @@ class TimeTest:
             event.fn()
             eventend = datetime.datetime.now()
             delta = eventend - eventstart
-            print("{0} : {1}".format(event.title, delta))
+            print("{0} : {1}".format(event.title, delta, platform_item))
         return report
