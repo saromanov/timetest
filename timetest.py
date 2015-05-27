@@ -1,6 +1,7 @@
 import datetime
 import sys
 import psutil
+import redisbackend
 
 
 #Main Event object
@@ -57,12 +58,12 @@ class TimeTest:
         if event.hardlimit < delta:
             print("It takes much more time")
 
-    def _store_results(self, info):
+    def _store_results(self, event_result):
         """ Store results of tests to backend store"""
         if self.backend == None:
             return
         else:
-            self.backend.addTimeTestResult(self.title, info)
+            self.backend.addTimeTestResult(self.title, event_result)
 
     def run(self):
         report = []
@@ -81,5 +82,7 @@ class TimeTest:
             event.fn()
             eventend = datetime.datetime.now()
             delta = eventend - eventstart
+            result = EventResult(event.title, delta, platform_item)
+            self._store_results(result)
             print("{0} : {1}".format(event.title, delta, platform_item))
         return report
