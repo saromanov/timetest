@@ -2,6 +2,7 @@ import datetime
 import sys
 import psutil
 import redisbackend
+from termcolor import colored
 
 
 #Main Event object
@@ -65,17 +66,20 @@ class TimeTest:
         else:
             self.backend.addTimeTestResult(self.title, event_result)
 
+    def _info(self, text):
+        return colored(text, 'white')
+
     def run(self):
         report = []
         platform_item = self._platform_info()
-        print("Platform information:")
-        print("OS: {0}".format(platform_item.platform))
-        print("CPU count: {0}".format(platform_item.cpucount))
+        print(colored("Platform information:", 'white', attrs=['bold']))
+        print(self._info("OS: {0}".format(platform_item.platform)))
+        print(self._info("CPU count: {0}".format(platform_item.cpucount)))
         pyversion = platform_item.pyversion
-        print("Python version: {0}.{1}".format(pyversion.major, pyversion.minor))
+        print(self._info("Python version: {0}.{1}".format(pyversion.major, pyversion.minor)))
         memory = platform_item.memory
-        print("Total virtual memory: {0}".format(memory.total))
-        print("Available virtual memory: {0}\n".format(memory.available))
+        print(self._info("Total virtual memory: {0}".format(memory.total)))
+        print(self._info("Available virtual memory: {0}\n".format(memory.available)))
         print("Time tests:")
         for event in self.events:
             eventstart = datetime.datetime.now()
@@ -84,5 +88,5 @@ class TimeTest:
             delta = eventend - eventstart
             result = EventResult(event.title, delta, platform_item)
             self._store_results(result)
-            print("{0} : {1}".format(event.title, delta, platform_item))
+            print(colored("{0} : {1}".format(event.title, delta, platform_item), 'green', attrs=['blink']))
         return report
