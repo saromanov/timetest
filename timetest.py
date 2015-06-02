@@ -54,10 +54,12 @@ class TimeTest:
         self._construct_event(fn,title, *args,**kwargs)
 
     def _analysis(self, event, delta):
-        if event.expected_delta < delta:
-            print("This event takes more time")
-        if event.hardlimit < delta:
-            print("It takes much more time")
+        delta = delta.total_seconds()
+        if event.expected_delta!= 0 and event.expected_delta < delta:
+            return "This event takes more time, expected {0}".format(event.expected_delta)
+        if event.hardlimit !=0 and event.hardlimit < delta:
+            return "It takes much more time, expected {0}".format(event.hardlimit)
+        return None
 
     def _store_results(self, event_result):
         """ Store results of tests to backend store"""
@@ -88,5 +90,9 @@ class TimeTest:
             delta = eventend - eventstart
             result = EventResult(event.title, delta, platform_item)
             self._store_results(result)
-            print(colored("{0} : {1}".format(event.title, delta, platform_item), 'green', attrs=['blink']))
+            text = self._analysis(event, delta)
+            if text == None:
+                print(colored("{0} : {1}".format(event.title, delta, platform_item), 'green', attrs=['blink']))
+            else:
+                print(colored("{0} : {1} ({2})".format(event.title, delta, text), 'red'))
         return report
