@@ -29,7 +29,22 @@ def foobar():
         yield i
 
 app = TimeTest('timetest')
-app.addTest(foobar)
+app.addTest('foobar', foobar)
+app.run()
+```
+
+or
+```python
+from timetest import TimeTest
+import time
+
+def foobar():
+    time.sleep(2000)
+    for i in range(10):
+        yield i
+
+app = TimeTest('timetest')
+app.addTest('foobar', foobar, expected=1)
 app.run()
 ```
 
