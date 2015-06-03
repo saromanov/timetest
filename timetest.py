@@ -82,7 +82,7 @@ class TimeTest:
         memory = platform_item.memory
         print(self._info("Total virtual memory: {0}".format(memory.total)))
         print(self._info("Available virtual memory: {0}\n".format(memory.available)))
-        print("Time tests:")
+        print("Time tests for {0}:".format(self.title))
         for event in self.events:
             eventstart = datetime.datetime.now()
             event.fn()
@@ -92,7 +92,7 @@ class TimeTest:
             self._store_results(result)
             text = self._analysis(event, delta)
             if text == None:
-                print(colored("{0} : {1}".format(event.title, delta, platform_item), 'green', attrs=['blink']))
+                print(colored("COMPLETE: {0} - {1}".format(event.title, delta, platform_item), 'green', attrs=['blink']))
             else:
-                print(colored("{0} : {1} ({2})".format(event.title, delta, text), 'red'))
+                print(colored("FAIL: {0} - {1} ({2})".format(event.title, delta, text), 'red'))
         return report
