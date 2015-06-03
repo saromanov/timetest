@@ -55,11 +55,11 @@ class TimeTest:
 
     def _analysis(self, event, delta):
         delta = delta.total_seconds()
-        if event.expected_delta!= 0 and event.expected_delta < delta:
-            return "This event takes more time, expected {0}".format(event.expected_delta)
         if event.hardlimit !=0 and event.hardlimit < delta:
-            return "It takes much more time, expected {0}".format(event.hardlimit)
-        return None
+            return "FAIL HARDLIMIT", "Hard limit was  {0}".format(event.hardlimit)
+        if event.expected_delta!= 0 and event.expected_delta < delta:
+            return "FAIL EXPECTED", "Expected was {0}".format(event.expected_delta)
+        return "", None
 
     def _store_results(self, event_result):
         """ Store results of tests to backend store"""
@@ -81,8 +81,8 @@ class TimeTest:
         print(self._info("Python version: {0}.{1}".format(pyversion.major, pyversion.minor)))
         memory = platform_item.memory
         print(self._info("Total virtual memory: {0}".format(memory.total)))
-        print(self._info("Available virtual memory: {0}\n".format(memory.available)))
-        print(self._info("Backend {0}".format(self.backend)))
+        print(self._info("Available virtual memory: {0}".format(memory.available)))
+        print(self._info("Backend {0}\n".format(self.backend)))
         print("Time tests for {0}:".format(self.title))
         for event in self.events:
             eventstart = datetime.datetime.now()
@@ -91,9 +91,9 @@ class TimeTest:
             delta = eventend - eventstart
             result = EventResult(event.title, delta, platform_item)
             self._store_results(result)
-            text = self._analysis(event, delta)
+            msg, text = self._analysis(event, delta)
             if text == None:
                 print(colored("COMPLETE: {0} - {1}".format(event.title, delta, platform_item), 'green', attrs=['blink']))
             else:
-                print(colored("FAIL: {0} - {1} ({2})".format(event.title, delta, text), 'red'))
+                print(colored("{0}: {1} - {2} ({3})".format(msg, event.title, delta, text), 'red'))
         return report
