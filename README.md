@@ -1,7 +1,12 @@
 # timetest
 
 
-# Usage
+#Setup
+
+```git clone https://github.com/saromanov/timetest
+```
+
+## Usage
 ```python
 from timetest import TimeTest
 import numpy as np
@@ -22,7 +27,7 @@ def dotproduct():
 
 app.run()
 ```
-or
+or simple
 ```python
 def foobar():
     for i in range(10):
@@ -33,7 +38,16 @@ app.addTest('foobar', foobar)
 app.run()
 ```
 
-or
+Also, you can limit each timetest with paremeters
+```
+expected
+```
+exprected time of running timetest
+```
+hardlimt
+```
+If time to running time test is greater than hard limit parameter, this time test will fail.
+
 ```python
 from timetest import TimeTest
 import time
@@ -47,4 +61,7 @@ app = TimeTest('timetest')
 app.addTest('foobar', foobar, expected=1)
 app.run()
 ```
+
+## LICENSE
+MIT
 
