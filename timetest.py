@@ -116,5 +116,5 @@ class TimeTest:
             if past_results != []:
                 print("Past results: ")
                 for result in past_results:
-                    print(result[1])
+                    print("{0} {1}".format(result[0],result[1]))
         return report

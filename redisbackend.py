@@ -33,7 +33,9 @@ class RedisBackend:
             raise Exception("Delta must be in the timedelta format")
         num_tests = self._getNumberOfTests(info.title)
         total_seconds = info.delta.total_seconds()
-        result = self.client.zadd(info.title, str(num_tests+1), total_seconds)
-        self._storePlatformInfo(info.title + "_" + str(num_tests + 1), info.platform_info)
+        now = datetime.datetime.now()
+        strnow = now.strftime('%Y-%m-%d %H:%M:%S')
+        result = self.client.zadd(info.title, strnow, total_seconds)
+        self._storePlatformInfo(info.title + "_" + strnow, info.platform_info)
         if result == 0:
             logging.info("Element {0} already exist".format(info.title))
