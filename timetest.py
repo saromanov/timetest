@@ -82,6 +82,7 @@ class TimeTest:
         memory = platform_item.memory
         print(self._info("Total virtual memory: {0}".format(memory.total)))
         print(self._info("Available virtual memory: {0}\n".format(memory.available)))
+        print(self._info("Backend {0}".format(self.backend)))
         print("Time tests for {0}:".format(self.title))
         for event in self.events:
             eventstart = datetime.datetime.now()
