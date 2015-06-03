@@ -28,10 +28,14 @@ class PlatformInfo:
         self.memory = kwargs.get('memory')
 
 class TimeTest:
-    def __init__(self, title, backend=None):
+    def __init__(self, title, backend=None, show_past_results=0):
+        """ backend - backend for store results of tests
+            show_past_results - show n best results from the previous
+        """
         self.events = []
         self.backend=backend
         self.title = title
+        self.show_past_results = show_past_results
         if backend == 'redis':
             try:
                 import redisbackend
@@ -72,9 +76,12 @@ class TimeTest:
         else:
             self.backend.addTimeTestResult(self.title, event_result)
 
-    def _getDataFromBackend(self):
+    def _getDataFromBackend(self, title, platform):
         """ Getting past results from current test """
-        pass
+        if self.backend == None or self.show_past_results == 0:
+            return
+        results = self.backend.getTimeTests(title, platform)
+        return results if self.show_past_results > len(results) else results[:self.show_past_results]
 
     def _info(self, text):
         return colored(text, 'white')
@@ -98,10 +105,16 @@ class TimeTest:
             eventend = datetime.datetime.now()
             delta = eventend - eventstart
             result = EventResult(event.title, delta, platform_item)
+            past_results = self._getDataFromBackend(event.title, None)
             self._store_results(result)
             msg, text = self._analysis(event, delta)
             if text == None:
                 print(colored("COMPLETE: {0} - {1}".format(event.title, delta, platform_item), 'green', attrs=['blink']))
             else:
                 print(colored("{0}: {1} - {2} ({3})".format(msg, event.title, delta, text), 'red'))
+
+            if past_results != []:
+                print("Past results: ")
+                for result in past_results:
+                    print(result[1])
         return report
