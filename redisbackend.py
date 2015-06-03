@@ -6,6 +6,7 @@ import json
 class RedisBackend:
     def __init__(self,host='localhost', port=6379):
         self.client = redis.Redis(host=host, port=port)
+        self.client.ping()
 
     def getTimeTests(self, title, platform):
         return self.client.zrange(title, 0,-1, withscores=True)

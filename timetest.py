@@ -33,8 +33,12 @@ class TimeTest:
         self.backend=backend
         self.title = title
         if backend == 'redis':
-            import redisbackend
-            self.backend = redisbackend.RedisBackend()
+            try:
+                import redisbackend
+                self.backend = redisbackend.RedisBackend()
+            except:
+                self.backend = None
+
 
     def __call__(self, fn, *args, **kwargs):
         self._construct_event(fn, fn.__name__)
@@ -67,6 +71,10 @@ class TimeTest:
             return
         else:
             self.backend.addTimeTestResult(self.title, event_result)
+
+    def _getDataFromBackend(self):
+        """ Getting past results from current test """
+        pass
 
     def _info(self, text):
         return colored(text, 'white')
