@@ -47,12 +47,15 @@ class TimeTest:
         self.backend=backend
         self.backend_name = None
         self.title = title
+        self.backend_start= False
         self.show_past_results = show_past_results
         if backend == 'redis':
             try:
                 import redisbackend
                 self.backend = redisbackend.RedisBackend()
                 self.backend_name = 'redis'
+                #Backend contains at the moment of starting
+                self.backend_start = True
             except:
                 self.backend = None
 
@@ -95,12 +98,15 @@ class TimeTest:
             self.backend.check()
             return True
         except:
-            print(colored("Backend in not available", "red"))
             return False
 
     def _getDataFromBackend(self, title, platform):
         """ Getting past results from current test """
-        if self.backend == None or self.show_past_results == 0 or not self._checkBackend():
+        if self.backend_start and not self._checkBackend():
+            # If backend is not available, set None to backend value
+            self.backend = None
+            print(colored("Backend in not available", "red"))
+        if self.backend == None or self.show_past_results == 0:
             return
         results = self.backend.getTimeTests(title, platform)
         return results if self.show_past_results > len(results) else results[:self.show_past_results]
