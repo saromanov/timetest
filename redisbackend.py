@@ -7,7 +7,7 @@ from backend import Backend
 class RedisBackend(Backend):
     def __init__(self,host='localhost', port=6379):
         self.client = redis.Redis(host=host, port=port)
-        self._check(0)
+        self.check()
 
     def check(self):
         self.client.ping()
