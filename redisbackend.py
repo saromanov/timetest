@@ -2,8 +2,9 @@ import redis
 import datetime
 import logging
 import json
+from backend import Backend
 
-class RedisBackend:
+class RedisBackend(Backend):
     def __init__(self,host='localhost', port=6379):
         self.client = redis.Redis(host=host, port=port)
         self.client.ping()
