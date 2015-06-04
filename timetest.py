@@ -110,6 +110,7 @@ class TimeTest:
             delta = eventend - eventstart
             result = EventResult(event.title, delta, platform_item)
             past_results = self._getDataFromBackend(event.title, None)
+            print(self.backend.getPlatformInfo(event.title))
             self._store_results(result)
             msg, text = self._analysis(event, delta)
             if text == None:
