@@ -2,6 +2,7 @@ import datetime
 import sys
 import psutil
 import redisbackend
+import logging
 from termcolor import colored
 
 
@@ -110,7 +111,9 @@ class TimeTest:
             delta = eventend - eventstart
             result = EventResult(event.title, delta, platform_item)
             past_results = self._getDataFromBackend(event.title, None)
-            print(self.backend.getPlatformInfo(event.title))
+            backend_result = self.backend.getPlatformInfo(event.title)
+            if all(res is None for (plat, res) in backend_result):
+                logging.info("Can't get information about plarform from backend")
             self._store_results(result)
             msg, text = self._analysis(event, delta)
             if text == None:

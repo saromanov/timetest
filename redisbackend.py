@@ -18,7 +18,7 @@ class RedisBackend:
         return self.client.zcount(title,float("-inf"),float("inf"))
 
     def _storePlatformInfo(self, title, platforminfo):
-        self.client.hmset("meminfo_" + title, {'platform': platforminfo.platform, 'cpucount': platforminfo.cpucount, \
+        return self.client.hmset("meminfo_" + title, {'platform': platforminfo.platform, 'cpucount': platforminfo.cpucount, \
                 'pyversion': platforminfo.pyversion, 'memory': platforminfo.memory})
 
     def getPlatformInfo(self, title):
@@ -36,6 +36,8 @@ class RedisBackend:
         now = datetime.datetime.now()
         strnow = now.strftime('%Y-%m-%d %H:%M:%S')
         result = self.client.zadd(info.title, strnow, total_seconds)
-        self._storePlatformInfo(info.title + "_" + strnow, info.platform_info)
+        platform_result = self._storePlatformInfo(info.title + "_" + strnow, info.platform_info)
+        if not platform_result:
+            logging.info("Information about platform was not added to redis")
         if result == 0:
             logging.info("Element {0} already exist".format(info.title))
