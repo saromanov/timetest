@@ -28,18 +28,20 @@ class PlatformInfo:
         self.memory = kwargs.get('memory')
 
 class TimeTest:
-    def __init__(self, title, backend=None, show_past_results=0):
+    def __init__(self, title, backend=None, show_past_results=0, *args, **kwargs):
         """ backend - backend for store results of tests
             show_past_results - show n best results from the previous
         """
         self.events = []
         self.backend=backend
+        self.backend_name = None
         self.title = title
         self.show_past_results = show_past_results
         if backend == 'redis':
             try:
                 import redisbackend
                 self.backend = redisbackend.RedisBackend()
+                self.backend_name = 'redis'
             except:
                 self.backend = None
 
@@ -97,7 +99,7 @@ class TimeTest:
         memory = platform_item.memory
         print(self._info("Total virtual memory: {0}".format(memory.total)))
         print(self._info("Available virtual memory: {0}".format(memory.available)))
-        print(self._info("Backend {0}\n".format(self.backend)))
+        print(self._info("Backend: {0}\n".format(self.backend_name)))
         print("Time tests for {0}:".format(self.title))
         num_completed = 0
         num_time_tests = len(self.events)
