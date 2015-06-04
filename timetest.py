@@ -8,6 +8,14 @@ from termcolor import colored
 
 #Main Event object
 class Event:
+    """ Inner class for representation timetest
+    arguments:
+       fn(function): test function, getting from user
+       title (string): title of test function. Usual this is name of function
+       **kwargs:
+       expected_delta(int) - expected time for running test
+       hardlimit (int) - if current test is greather then this param, show FAIL
+    """
     def __init__(self, fn, title, *args, **kwargs):
         self.fn = fn
         self.title = title
@@ -16,12 +24,14 @@ class Event:
 
 
 class EventResult:
+    """ Inner class for representation result of timetest """
     def __init__(self, title, delta, platform_info):
         self.title = title
         self.delta = delta
         self.platform_info = platform_info
 
 class PlatformInfo:
+    """ Inner class for platform information, where test was running """
     def __init__(self, *args, **kwargs):
         self.platform = kwargs.get('platform')
         self.cpucount = kwargs.get('cpucount')
