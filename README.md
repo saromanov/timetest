@@ -3,7 +3,9 @@
 
 # Setup
 
-```git clone https://github.com/saromanov/timetest
+```
+git clone https://github.com/saromanov/timetest
+
 ```
 
 ## Usage
