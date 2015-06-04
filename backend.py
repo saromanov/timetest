@@ -13,3 +13,6 @@ class Backend(metaclass=ABCMeta):
 	@abstractmethod
 	def getPlatformInfo(self, title):
 		raise NotImplementedError("Not implemented")
+	@abstractmethod
+	def check(self):
+		raise NotImplementedError("Not implemented")

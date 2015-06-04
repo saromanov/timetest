@@ -89,12 +89,30 @@ class TimeTest:
         else:
             self.backend.addTimeTestResult(self.title, event_result)
 
+    def _checkBackend(self):
+        """ Before read or write, check availability of backend """
+        try:
+            self.backend.check()
+            return True
+        except:
+            print(colored("Backend in not available", "red"))
+            return False
+
     def _getDataFromBackend(self, title, platform):
         """ Getting past results from current test """
-        if self.backend == None or self.show_past_results == 0:
+        if self.backend == None or self.show_past_results == 0 or not self._checkBackend():
             return
         results = self.backend.getTimeTests(title, platform)
         return results if self.show_past_results > len(results) else results[:self.show_past_results]
+
+    def _getPlatformInfoFromBackend(self, title):
+        if self.backend == None:
+            return
+        backend_result = self.backend.getPlatformInfo(title)
+        if all(res is None for (plat, res) in backend_result):
+            logging.info("Can't get information about plarform from backend")
+            return
+        return backend_result
 
     def _info(self, text):
         return colored(text, 'white')
@@ -121,9 +139,7 @@ class TimeTest:
             delta = eventend - eventstart
             result = EventResult(event.title, delta, platform_item)
             past_results = self._getDataFromBackend(event.title, None)
-            backend_result = self.backend.getPlatformInfo(event.title)
-            if all(res is None for (plat, res) in backend_result):
-                logging.info("Can't get information about plarform from backend")
+            backend_result = self._getPlatformInfoFromBackend(event.title)
             self._store_results(result)
             msg, text = self._analysis(event, delta)
             if text == None:
