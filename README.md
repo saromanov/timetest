@@ -1,12 +1,13 @@
 # timetest
 
 
-#Setup
+# Setup
 
 ```git clone https://github.com/saromanov/timetest
 ```
 
 ## Usage
+
 ```python
 from timetest import TimeTest
 import numpy as np
@@ -27,6 +28,7 @@ def dotproduct():
 
 app.run()
 ```
+
 or simple
 ```python
 def foobar():
