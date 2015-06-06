@@ -123,6 +123,22 @@ class TimeTest:
     def _info(self, text):
         return colored(text, 'white')
 
+    def compare(self, title1, title2):
+        ''' This method provides compare of results betfeen two functions '''
+        platform_info = self._platform_info()
+        result1 = self._getDataFromBackend(title1, platform_info)
+        if result1 == None or len(result1) == 0:
+            print(colored("Can't find information about {0}".format(title1), 'red'))
+            return False
+        result1 = float(result1[0][1])
+        result2 = self._getDataFromBackend(title2, platform_info)
+        if result2 == None or len(result2) == 0:
+             print(colored("Can't find information about {0}".format(title2), 'red'))
+             return
+        result2 = float(result2[0][1])
+        print(colored("{0} - {1}".format(title1, result1), "blue"))
+        print(colored("{0} - {1}".format(title2, result2), "blue"))
+
     def run(self):
         report = []
         platform_item = self._platform_info()
