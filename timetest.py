@@ -58,6 +58,7 @@ class TimeTest:
                 self.backend_start = True
             except:
                 self.backend = None
+                print(colored("Redis is not ready", 'red'))
 
 
     def __call__(self, fn, *args, **kwargs):
