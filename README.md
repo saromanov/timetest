@@ -66,6 +66,11 @@ app.addTest('foobar', foobar, expected=1)
 app.run()
 ```
 
+Comparison between tests
+```
+app.compare('test1', 'test2')
+```
+
 ## LICENSE
 MIT
 
