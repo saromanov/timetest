@@ -68,7 +68,22 @@ def foobar():
         yield i
 
 app = TimeTest('timetest')
-app.addTest('foobar', foobar, expected=1)
+app.addTest('foobar', foobar, expected_time_sec=1)
+app.run()
+```
+
+Expected results
+```python
+from timetest import TimeTest, Expected
+import time
+
+def foobar():
+    time.sleep(2000)
+    for i in range(10):
+        yield i
+
+app = TimeTest('timetest')
+app.addTest('foobar', foobar, expected=Expected.HIGHEST)
 app.run()
 ```
 
