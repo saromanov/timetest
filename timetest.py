@@ -4,6 +4,7 @@ import psutil
 import redisbackend
 import logging
 from termcolor import colored
+from enum import Enum
 
 
 #Main Event object
@@ -38,6 +39,7 @@ class PlatformInfo:
         self.pyversion = kwargs.get('pyversion')
         self.memory = kwargs.get('memory')
 
+
 class TimeTest:
     def __init__(self, title, backend=None, show_past_results=0, *args, **kwargs):
         """ backend - backend for store results of tests
@@ -68,9 +70,9 @@ class TimeTest:
         return inner
 
     def _construct_event(self, fn, name, *args,**kwargs):
-        expected = kwargs.get('expected',0)
+        expected_time_sec = kwargs.get('expected_time_sec',0)
         hardlimit = kwargs.get('hardlimit',0)
-        self.events.append(Event(fn, name, expected_delta=expected, hardlimit=hardlimit))
+        self.events.append(Event(fn, name, expected_delta=expected_time_sec, hardlimit=hardlimit))
 
     def _platform_info(self):
         return PlatformInfo(platform=sys.platform, cpucount=psutil.cpu_count(),pyversion=sys.version_info, memory=psutil.virtual_memory())
