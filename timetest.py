@@ -22,6 +22,7 @@ class Event:
         self.title = title
         self.expected_delta = kwargs.get('expected_delta', 0)
         self.hardlimit = kwargs.get('hardlimit', 0)
+        self.expected = kwargs.get('expected')
 
 
 class EventResult:
@@ -39,6 +40,14 @@ class PlatformInfo:
         self.pyversion = kwargs.get('pyversion')
         self.memory = kwargs.get('memory')
 
+class Expected(Enum):
+    ''' This class provides expected results on time test
+        HIGHEST - current result must be better than previous results
+        AVERAGE - current result must be average compare to previous results
+        This works only with backend
+    ''' 
+    HIGHEST = 1
+    AVERAGE = 2
 
 class TimeTest:
     def __init__(self, title, backend=None, show_past_results=0, *args, **kwargs):
@@ -72,7 +81,8 @@ class TimeTest:
     def _construct_event(self, fn, name, *args,**kwargs):
         expected_time_sec = kwargs.get('expected_time_sec',0)
         hardlimit = kwargs.get('hardlimit',0)
-        self.events.append(Event(fn, name, expected_delta=expected_time_sec, hardlimit=hardlimit))
+        expected = kwargs.get('expected')
+        self.events.append(Event(fn, name, expected_delta=expected_time_sec, hardlimit=hardlimit, expected=expected))
 
     def _platform_info(self):
         return PlatformInfo(platform=sys.platform, cpucount=psutil.cpu_count(),pyversion=sys.version_info, memory=psutil.virtual_memory())
@@ -123,6 +133,19 @@ class TimeTest:
             return
         return backend_result
 
+    def _getExpected(self, past_results, delta, event):
+        if event.expected == None or self.backend == None:
+            return
+        if event.expected == Expected.HIGHEST:
+            if delta.total_seconds() >= past_results[0][1]:
+                return colored("FAIL Expected. Current result is not highest", 'red')
+            else:
+                return colored("PASSED Expected. Current results is highest", 'green')
+        if event.expected == Expected.AVERAGE:
+            #Not implemented yet
+            pass
+            
+
     def _info(self, text):
         return colored(text, 'white')
 
@@ -165,6 +188,8 @@ class TimeTest:
             delta = eventend - eventstart
             result = EventResult(event.title, delta, platform_item)
             past_results = self._getDataFromBackend(event.title, None)
+            expmsg = self._getExpected(past_results, delta, event)
+            print(expmsg)
             backend_result = self._getPlatformInfoFromBackend(event.title)
             self._store_results(result)
             msg, text = self._analysis(event, delta)
