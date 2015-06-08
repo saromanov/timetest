@@ -125,7 +125,7 @@ class TimeTest:
         return colored(text, 'white')
 
     def compare(self, title1, title2):
-        ''' This method provides compare of results betfeen two functions '''
+        ''' This method provides compare of results betfeen two tests'''
         platform_info = self._platform_info()
         result1 = self._getDataFromBackend(title1, platform_info)
         if result1 == None or len(result1) == 0:
@@ -154,6 +154,7 @@ class TimeTest:
         print(self._info("Backend: {0}\n".format(self.backend_name)))
         print("Time tests for {0}:".format(self.title))
         num_completed = 0
+        num_failures = 0
         num_time_tests = len(self.events)
         for event in self.events:
             eventstart = datetime.datetime.now()
@@ -169,6 +170,7 @@ class TimeTest:
                 num_completed += 1
                 print(colored("COMPLETE: {0} - {1}".format(event.title, delta, platform_item), 'green', attrs=['blink']))
             else:
+                num_failures += 1
                 print(colored("{0}: {1} - {2} ({3})".format(msg, event.title, delta, text), 'red'))
 
             if past_results != None and past_results != []:
@@ -176,5 +178,7 @@ class TimeTest:
                 for result in past_results:
                     print("{0} {1}".format(result[0],result[1]))
             if num_completed == num_time_tests:
-                print("\nAll time tests was completed")
+                print("\nAll time tests was completed!")
+            else:
+                print("Number of failures: {0}".format(num_failures))
         return report
