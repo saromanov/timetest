@@ -44,9 +44,15 @@ app.run()
 
 Also, you can limit each timetest with paremeters
 ```
-expected
+expected_time_sec
 ```
-exprected time of running timetest
+exprected time of running timetest in seconds
+For example, if you expect, that your time test takes 3 second, just put
+```python
+timetest.addTest('foobar', expected_time_sec=3)
+```
+
+or 
 ```
 hardlimt
 ```
