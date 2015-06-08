@@ -134,16 +134,14 @@ class TimeTest:
         return backend_result
 
     def _getExpected(self, past_results, delta, event):
-        if event.expected == None or self.backend == None:
-            return
         if event.expected == Expected.HIGHEST:
             if delta.total_seconds() >= past_results[0][1]:
-                return colored("FAIL Expected. Current result is not highest", 'red')
+                return 0, colored("FAIL Expected. Current result is not highest", 'red')
             else:
-                return colored("PASSED Expected. Current results is highest", 'green')
+                return 1, colored("PASSED Expected. Current results is highest", 'green')
         if event.expected == Expected.AVERAGE:
             #Not implemented yet
-            pass
+            return 1,""
             
 
     def _info(self, text):
@@ -165,9 +163,7 @@ class TimeTest:
         print(colored("{0} - {1}".format(title1, result1), "blue"))
         print(colored("{0} - {1}".format(title2, result2), "blue"))
 
-    def run(self):
-        report = []
-        platform_item = self._platform_info()
+    def _show_system_info(self, platform_item):
         print(colored("Platform information:", 'white', attrs=['bold']))
         print(self._info("OS: {0}".format(platform_item.platform)))
         print(self._info("CPU count: {0}".format(platform_item.cpucount)))
@@ -178,6 +174,11 @@ class TimeTest:
         print(self._info("Available virtual memory: {0}".format(memory.available)))
         print(self._info("Backend: {0}\n".format(self.backend_name)))
         print("Time tests for {0}:".format(self.title))
+
+    def run(self):
+        report = []
+        platform_item = self._platform_info()
+        self._show_system_info(platform_item)
         num_completed = 0
         num_failures = 0
         num_time_tests = len(self.events)
@@ -188,8 +189,11 @@ class TimeTest:
             delta = eventend - eventstart
             result = EventResult(event.title, delta, platform_item)
             past_results = self._getDataFromBackend(event.title, None)
-            expmsg = self._getExpected(past_results, delta, event)
-            print(expmsg)
+            if event.expected != None and self.backend != None:
+                status, expmsg = self._getExpected(past_results, delta, event)
+                num_failures += status
+                num_completed -= status
+                print(expmsg)
             backend_result = self._getPlatformInfoFromBackend(event.title)
             self._store_results(result)
             msg, text = self._analysis(event, delta)
