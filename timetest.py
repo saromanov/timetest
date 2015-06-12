@@ -142,6 +142,9 @@ class TimeTest:
         if event.expected == Expected.AVERAGE:
             #Not implemented yet
             return 1,""
+        else:
+            logging.info("Found error in expected parameter")
+            return 0,""
 
 
     def _info(self, text):
@@ -210,6 +213,7 @@ class TimeTest:
                     print("{0} {1}".format(result[0],result[1]))
             if num_completed == num_time_tests:
                 print("\nAll time tests was completed!")
-            elif num_failures > 0:
-                print("Number of failures: {0}".format(num_failures))
+        print(" ")
+        if num_failures > 0:
+            print("Number of failures: {0}".format(num_failures))
         return report
