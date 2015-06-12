@@ -186,6 +186,7 @@ class TimeTest:
         num_failures = 0
         num_time_tests = len(self.events)
         for event in self.events:
+            print(colored(">Start working {0}".format(event.title), 'magenta'))
             eventstart = datetime.datetime.now()
             event.fn()
             eventend = datetime.datetime.now()
