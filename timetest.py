@@ -210,6 +210,6 @@ class TimeTest:
                     print("{0} {1}".format(result[0],result[1]))
             if num_completed == num_time_tests:
                 print("\nAll time tests was completed!")
-            else:
+            elif num_failures > 0:
                 print("Number of failures: {0}".format(num_failures))
         return report
