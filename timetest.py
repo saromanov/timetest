@@ -45,7 +45,7 @@ class Expected(Enum):
         HIGHEST - current result must be better than previous results
         AVERAGE - current result must be average compare to previous results
         This works only with backend
-    ''' 
+    '''
     HIGHEST = 1
     AVERAGE = 2
 
@@ -142,13 +142,13 @@ class TimeTest:
         if event.expected == Expected.AVERAGE:
             #Not implemented yet
             return 1,""
-            
+
 
     def _info(self, text):
         return colored(text, 'white')
 
     def compare(self, title1, title2):
-        ''' This method provides compare of results betfeen two tests'''
+        ''' This method provides compare of results between two tests'''
         platform_info = self._platform_info()
         result1 = self._getDataFromBackend(title1, platform_info)
         if result1 == None or len(result1) == 0:
