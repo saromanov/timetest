@@ -5,6 +5,8 @@
 
 ```
 git clone https://github.com/saromanov/timetest
+cd timetest
+python3 setup.py install
 
 ```
 
