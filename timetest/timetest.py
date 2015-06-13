@@ -118,6 +118,7 @@ class TimeTest(object):
         except:
             return False
 
+
     def _getDataFromBackend(self, title, platform):
         """ Getting past results from current test """
         if self.backend_start and not self._checkBackend():
