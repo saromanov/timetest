@@ -1,5 +1,5 @@
 # timetest
-
+Timetest provides measurement for execution time of functions. Use redis as backend for compare previous results
 
 # Setup
 
@@ -9,8 +9,10 @@ cd timetest
 python3 setup.py install
 
 ```
+Note: Timetest works only with python3.*
 
 ## Usage
+If you want to get execution time of functions foobar and dotproduct, just do it:
 
 ```python
 from timetest import TimeTest
