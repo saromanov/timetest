@@ -46,21 +46,15 @@ app.addTest('foobar', foobar)
 app.run()
 ```
 
-Also, you can limit each timetest with paremeters
-```
-expected_time_sec
-```
-exprected time of running timetest in seconds
+Also, you can limit each timetest with paremeters:
+-expected_time_sec - exprected time of running timetest in the seconds)
 For example, if you expect, that your time test takes 3 second, just put
 ```python
 timetest.addTest('foobar', expected_time_sec=3)
 ```
+If this time test take more time, than 3 seconds, you'll get failure of your time test.
 
-or 
-```
-hardlimt
-```
-If time to running time test is greater than hard limit parameter, this time test will fail.
+hardlimt - If time to running time test is greater than hard limit parameter, this time test will fail.
 
 ```python
 from timetest import TimeTest
